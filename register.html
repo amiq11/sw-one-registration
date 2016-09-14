@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<script>
+addEventListener('load', () => {
+    let n = document.getElementById('result');
+    n.innerText = 'registering... ';
+  });
+
+navigator.serviceWorker.register('noop-fetch-worker.js')
+  .then(function(r) {
+      console.log('registered!', r);
+      let n = document.getElementById('result');
+      n.innerText += 'registered!';
+    });
+</script>
+<body>
+  <div id="result"></div>
+</body>
+
