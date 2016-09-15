@@ -5,7 +5,7 @@ addEventListener('load', () => {
     n.innerText = 'registering... ';
   });
 
-navigator.serviceWorker.register('noop-fetch-worker.js')
+navigator.serviceWorker.register('sw.js', {scope: '/in-scope'})
   .then(function(r) {
       console.log('registered!', r);
       let n = document.getElementById('result');
