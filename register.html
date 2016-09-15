@@ -1,18 +1,51 @@
 <!DOCTYPE html>
 <script>
-addEventListener('load', () => {
-    let n = document.getElementById('result');
-    n.innerText = 'registering... ';
-  });
+let SCOPE = './in-scope';
+let WORKER_URL = 'sw.js';
 
-navigator.serviceWorker.register('sw.js', {scope: '/in-scope'})
-  .then(function(r) {
-      console.log('registered!', r);
-      let n = document.getElementById('result');
-      n.innerText += 'registered!';
-    });
+function appendResult(message) {
+  let result = document.getElementById('result');
+  result.value += message + '\n';
+}
+
+addEventListener('load', () => {
+    document.getElementById('register').addEventListener('click', () => {
+        appendResult('registering');
+        navigator.serviceWorker.register(WORKER_URL, {scope: SCOPE})
+          .then(r => {
+              console.log('registered!', r);
+              appendResult('registered!');
+            });
+      });
+    document.getElementById('unregister').addEventListener('click', () => {
+        navigator.serviceWorker.getRegistration(SCOPE)
+          .then((r) => {
+              if (r) {
+                appendResult('unregistering...');
+                return r.unregister();
+              } else {
+                appendResult('registration is not found.');
+                return Promise.reject();
+              }
+            })
+          .then(() => {
+              console.log('unregistered!');
+              appendResult('unregistered!');
+            });
+      });
+    appendResult('loaded');
+  });
 </script>
 <body>
-  <div id="result"></div>
+  <div>
+    <textarea id="result"></textarea>
+  </div>
+  <div>
+    <button id="register">Register</button>
+    <button id="unregister">Unregister</button>
+  </div>
+  <div id="link">
+    <a href="./in-scope/">Go to "in-scope" page</a>
+  </div>
 </body>
 
