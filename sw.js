@@ -1,3 +1,4 @@
+// Check if a warning shows up
 setTimeout(() => {
     addEventListener('install', e => {
         console.log('installing...');
@@ -6,5 +7,9 @@ setTimeout(() => {
 
 // Adds fetch handler not to skip this script
 addEventListener('fetch', e => {
-    e.respondWith(new Response('intercepted'));
+    if (e.request.url.indexOf('text') > 0) {
+      e.respondWith(fetch('foo.txt'));
+    } else {
+      e.respondWith(new Response('intercepted'));
+    }
   });
