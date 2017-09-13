@@ -1,0 +1,23 @@
+{
+  "name": "sw-one-registeration",
+  "version": "1.0.0",
+  "description": "Simplest test for the service workers ====",
+  "main": "nocache_server.js",
+  "dependencies": {
+    "express": "^4.15.4"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/amiq11/sw-one-registration.git"
+  },
+  "author": "",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/amiq11/sw-one-registration/issues"
+  },
+  "homepage": "https://github.com/amiq11/sw-one-registration#readme"
+}

@@ -16,8 +16,12 @@ addEventListener('load', () => {
         appendResult('registering');
         navigator.serviceWorker.register(WORKER_URL, {scope: SCOPE})
           .then(r => {
-              console.log('registered!', r);
-              appendResult('registered!');
+                console.log('registered!', r);
+                appendResult('registered!');
+            })
+          .catch(() => {
+              console.log('registration failed');
+              appendResult('registration failed');
             });
       });
     document.getElementById('unregister').addEventListener('click', () => {
