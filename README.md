@@ -4,11 +4,12 @@ Simplest test for the service workers
 Usage
 ----
 
-Run nocache_server.py, open register.html and open index.html. 
+Run nocache_server.js, open index.html
 
 ```
-$ ./nocache_server.py
-$ google-chrome http://localhost:8000/register.html
+$ npm install
+$ node nocache_server.js
+$ google-chrome http://localhost:8080/
 ```
 
 
