@@ -1,0 +1,28 @@
+
+addEventListener('install', (e) => {
+  // e.waitUntil(skipWaiting());
+});
+
+addEventListener('activate', (e) => {
+  // e.waitUntil(clients.claim());
+});
+
+addEventListener('fetch', (e) => {
+  e.respondWith(new Response('hehehe'));
+});
+
+function getRandomInt(min, max) {
+  return Math.floor(Math.random() * (max - min + 1));
+}
+
+let x = getRandomInt(0, 10);
+console.log(x);
+if (x <= 10) {
+  hhh();
+}
+
+function hhh() {
+  return getRandomInt();
+}
+
+// にほんご

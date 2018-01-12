@@ -3,59 +3,101 @@
 <link rel="icon" type="image/png" href="./favicon.png" />
 <title>Simple Service Worker Test</title>
 <script>
-let SCOPE = './in-scope';
-let WORKER_URL = 'sw.js';
+ const SCOPE = './in-scope';
+ const WORKER_URL = 'sw.js';
+ const VARIABLE_WORKER_URL = 'sw-blank-variant.js';
 
-function appendResult(message) {
-  let result = document.getElementById('result');
-  result.value += message + '\n';
-}
+ function appendResult(message) {
+     let result = document.getElementById('result');
+     result.value += message + '\n';
+ }
 
-addEventListener('load', () => {
-    document.getElementById('register').addEventListener('click', () => {
-        appendResult('registering');
-        navigator.serviceWorker.register(WORKER_URL, {scope: SCOPE})
-          .then(r => {
-                console.log('registered!', r);
-                appendResult('registered!');
-            })
-          .catch(() => {
-              console.log('registration failed');
-              appendResult('registration failed');
-            });
-      });
-    document.getElementById('unregister').addEventListener('click', () => {
-        navigator.serviceWorker.getRegistration(SCOPE)
-          .then((r) => {
-              if (r) {
-                appendResult('unregistering...');
-                return r.unregister();
-              } else {
-                appendResult('registration is not found.');
-                return Promise.reject();
-              }
-            })
-          .then(() => {
-              console.log('unregistered!');
-              appendResult('unregistered!');
-            });
-      });
-    appendResult('loaded');
-  });
+ function registerServiceWorker(script_url, scope) {
+     appendResult('registering');
+     return navigator.serviceWorker.register(script_url, {scope: scope})
+                     .then(r => {
+                         console.log(`registered! script: ${script_url}`, r);
+                         appendResult(`registered! script: ${script_url}`);
+                     })
+                     .catch(() => {
+                         console.log('registration failed');
+                         appendResult('registration failed');
+                     });
+ }
+
+ function unregisterServiceWorker(scope) {
+     return navigator.serviceWorker.getRegistration(scope)
+                     .then((r) => {
+                         if (r) {
+                             appendResult('unregistering...');
+                             return r.unregister();
+                         } else {
+                             appendResult('registration is not found.');
+                             return Promise.reject();
+                         }
+                     })
+                     .then(() => {
+                         console.log('unregistered!');
+                         appendResult('unregistered!');
+                     });
+ }
+
+ addEventListener('load', () => {
+     document.getElementById('register').addEventListener(
+         'click', registerServiceWorker.bind(this, WORKER_URL, SCOPE));
+     document.getElementById('unregister').addEventListener(
+         'click', unregisterServiceWorker.bind(this, SCOPE));
+     document.getElementById('register-variant').addEventListener(
+         'click', registerServiceWorker.bind(this, VARIABLE_WORKER_URL, SCOPE));
+     document.getElementById('unregister-variant').addEventListener(
+         'click', unregisterServiceWorker.bind(this, SCOPE));
+     document.getElementById('create-inscope-iframe').addEventListener(
+         'click', () => {
+             let iframe1 = document.createElement('iframe');
+             let iframe2 = document.createElement('iframe');
+             iframe1.src = SCOPE;
+             iframe2.src = SCOPE;
+             let div = document.getElementById('iframes');
+             div.appendChild(iframe1);
+             div.appendChild(iframe2);
+             navigator.serviceWorker.getRegistration(SCOPE).then((reg) => {
+                 iframe2.remove();
+             });
+         });
+     document.getElementById('remove-iframes').addEventListener(
+         'click', () => {
+             let iframes = document.getElementById('iframes');
+             while (iframes.firstChild) {
+                 iframes.firstChild.remove();
+             }
+         });
+     appendResult('loaded');
+ });
 </script>
 <body>
-  <div>
-    <textarea id="result"></textarea>
+    <div>
+        <textarea id="result"></textarea>
+    </div>
+    <div>
+        <button id="register">Register (sw.js)</button>
+        <button id="unregister">Unregister (sw.js)</button>
+    </div>
+    <div>
+        <button id="register-variant">Register (variant)</button>
+        <button id="unregister-variant">Unregister (variant)</button>
+    </div>
+    <div>
+        <button id="create-inscope-iframe">Create an inscope iframe</button>
+        <button id="remove-iframes">Remove all iframes</button>
+    </div>
+    <div id="link">
+        <ul>
+            <li><a href="./in-scope/intercepted">Go to "in-scope" page: "new Response('intercepted')</a></li>
+            <li><a href="./in-scope/text">Go to "in-scope" page: "fetch('foo.txt')"</a></li>
+            <li><a href="./in-scope/heavy.html">Go to "in-scope" page: "heavy fetch"</a></li>
+        </ul>
   </div>
-  <div>
-    <button id="register">Register</button>
-    <button id="unregister">Unregister</button>
-  </div>
-  <div id="link">
-    <ul>
-      <li><a href="./in-scope/">Go to "in-scope" page: "new Response('intercepted')</a></li>
-      <li><a href="./in-scope/text">Go to "in-scope" page: "fetch('foo.txt')"</a></li>
-    </ul>
+  <div id="iframes">
   </div>
 </body>
 

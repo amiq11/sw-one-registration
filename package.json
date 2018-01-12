@@ -4,7 +4,10 @@
   "description": "Simplest test for the service workers ====",
   "main": "nocache_server.js",
   "dependencies": {
-    "express": "^4.15.4"
+    "ejs": "^2.5.7",
+    "express": "^4.15.4",
+    "express-stream": "^0.8.0",
+    "slow-stream": "0.0.4"
   },
   "devDependencies": {},
   "scripts": {
