@@ -27,7 +27,7 @@ app.get('/:name\.js', (req, res) => {
 
 app.get('/slow/:name', stream.pipe(), (req, res) => {
   let filepath = `${__dirname}/public/${req.params.name}`;
-  fs.createReadStream(filepath, {bufferSize: 64})
-      .pipe(new SlowStream({maxWriteInterval: 100}))
+  fs.createReadStream(filepath, {bufferSize: 1})
+      .pipe(new SlowStream({maxWriteInterval: 0}))
       .pipe(res);
 });
