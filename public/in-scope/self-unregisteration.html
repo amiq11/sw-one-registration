@@ -1,0 +1,28 @@
+<!doctype html>
+<body>
+  <div>
+    <textarea id="result"></textarea>
+    <button id="unregister">Unregister!</button>
+  </div>
+  <script>
+  function appendResult(message) {
+    let result = document.getElementById('result');
+    result.value += message + '\n';
+  }
+  document.getElementById('unregister').addEventListener('click', () => {
+    navigator.serviceWorker.addEventListener('message', e => {
+      appendResult(`Message from the worker: ${e.data}`);
+    });
+    appendResult('start unregistration....');
+    navigator.serviceWorker.controller.postMessage('unregister');
+  });
+
+  addEventListener('load', () => {
+    if (!navigator.serviceWorker.controller) {
+      appendResult('no controller found.');
+      return;
+    }
+    appendResult(`controller: ${navigator.serviceWorker.controller.scriptURL}`);
+  });
+  </script>
+</body>
